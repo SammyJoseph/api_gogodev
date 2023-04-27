@@ -4,58 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\NoteRequest;
 use App\Models\Note;
+use Illuminate\Http\JsonResponse;
 
 class NoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index():JsonResponse
     {
-        $notes = Note::all();
-
-        return response()->json($notes, 200);
+        return response()->json(Note::all(), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(NoteRequest $request) // NoteRequest es mi validador que reemplaza a Request
+    public function store(NoteRequest $request):JsonResponse // NoteRequest es mi validador que reemplaza a Request
     {
-        Note::create($request->all());
+        $note = Note::create($request->all());
 
         return response()->json([
             'success' => true,
+            'data' => $note,
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(string $id):JsonResponse
     {
         $note = Note::find($id);
 
         return response()->json($note, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(NoteRequest $request, string $id)
+    public function update(NoteRequest $request, string $id):JsonResponse
     {
         $note = Note::find($id);
         $note->update($request->all());
 
         return response()->json([
             'success' => true,
+            'data' => $note,
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(string $id):JsonResponse
     {
         Note::find($id)->delete();        
 
