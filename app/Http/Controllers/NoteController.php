@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NoteRequest;
+use App\Http\Resources\NoteResource;
 use App\Models\Note;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NoteController extends Controller
 {
-    public function index():JsonResponse
+    public function index():JsonResource
     {
-        return response()->json(Note::all(), 200);
+        // return response()->json(Note::all(), 200);
+        return NoteResource::collection(Note::all());
     }
 
     public function store(NoteRequest $request):JsonResponse // NoteRequest es mi validador que reemplaza a Request
@@ -19,15 +22,16 @@ class NoteController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $note,
+            'data' => new NoteResource($note),
         ], 201);
     }
 
-    public function show(string $id):JsonResponse
+    public function show(string $id):JsonResource
     {
         $note = Note::find($id);
 
-        return response()->json($note, 200);
+        // return response()->json($note, 200);
+        return new NoteResource($note);
     }
 
     public function update(NoteRequest $request, string $id):JsonResponse
@@ -37,7 +41,7 @@ class NoteController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $note,
+            'data' => new NoteResource($note),
         ], 200);
     }
 
